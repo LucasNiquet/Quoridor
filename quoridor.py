@@ -1,3 +1,72 @@
+import networkx as nx
+
+
+def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
+    """
+    Crée le graphe des déplacements admissibles pour les joueurs.
+
+    :param joueurs: une liste des positions (x,y) des joueurs.
+    :param murs_horizontaux: une liste des positions (x,y) des murs horizontaux.
+    :param murs_verticaux: une liste des positions (x,y) des murs verticaux.
+    :returns: le graphe bidirectionnel (en networkX) des déplacements admissibles.
+    """
+    graphe = nx.DiGraph()
+
+    # pour chaque colonne du damier
+    for x in range(1, 10):
+        # pour chaque ligne du damier
+        for y in range(1, 10):
+            # ajouter les arcs de tous les déplacements possibles pour cette tuile
+            if x > 1:
+                graphe.add_edge((x, y), (x-1, y))
+            if x < 9:
+                graphe.add_edge((x, y), (x+1, y))
+            if y > 1:
+                graphe.add_edge((x, y), (x, y-1))
+            if y < 9:
+                graphe.add_edge((x, y), (x, y+1))
+
+    # retirer tous les arcs qui croisent les murs horizontaux
+    for x, y in murs_horizontaux:
+        graphe.remove_edge((x, y-1), (x, y))
+        graphe.remove_edge((x, y), (x, y-1))
+        graphe.remove_edge((x+1, y-1), (x+1, y))
+        graphe.remove_edge((x+1, y), (x+1, y-1))
+
+    # retirer tous les arcs qui croisent les murs verticaux
+    for x, y in murs_verticaux:
+        graphe.remove_edge((x-1, y), (x, y))
+        graphe.remove_edge((x, y), (x-1, y))
+        graphe.remove_edge((x-1, y+1), (x, y+1))
+        graphe.remove_edge((x, y+1), (x-1, y+1))
+
+    # retirer tous les arcs qui pointent vers les positions des joueurs
+    # et ajouter les sauts en ligne droite ou en diagonale, selon le cas
+    for joueur in map(tuple, joueurs):
+
+        for prédécesseur in list(graphe.predecessors(joueur)):
+            graphe.remove_edge(prédécesseur, joueur)
+
+            # si admissible, ajouter un lien sauteur
+            successeur = (2*joueur[0]-prédécesseur[0], 2*joueur[1]-prédécesseur[1])
+
+            if successeur in graphe.successors(joueur) and successeur not in joueurs:
+                # ajouter un saut en ligne droite
+                graphe.add_edge(prédécesseur, successeur)
+
+            else:
+                # ajouter les liens en diagonal
+                for successeur in list(graphe.successors(joueur)):
+                    if prédécesseur != successeur and successeur not in joueurs:
+                        graphe.add_edge(prédécesseur, successeur)
+
+    # ajouter les noeuds objectifs des deux joueurs
+    for x in range(1, 10):
+        graphe.add_edge((x, 9), 'B1')
+        graphe.add_edge((x, 1), 'B2')
+
+    return graphe
+    
 def __init__(self, joueurs, murs=None):
     if joueurs is None:
         raise QuoridorError("joueurs n'est pas un itérable.")
@@ -74,43 +143,55 @@ def __str__(self):
     return damier
 
 def déplacer_jeton(self, joueur, position):
-    x = position[0]
-    y = position[1]
-    xJ = self.joueurs[joueur - 1]['pos'][0]
-    yJ = self.joueurs[joueur - 1]['pos'][1]
-
     if joueur > 2 or joueur < 1:
         raise QuoridorError("le numéro du joueur est autre que 1 ou 2.")
 
-    if x > 9 or x < 1 or y > 9 or y < 1:
+    if position[0] > 9 or position[0] < 1 or position[1] > 9 or position[1] < 1:
         raise QuoridorError("la position est invalide (en dehors du damier).")
 
-    # si le joueur se déplace à gauche
-    if xJ - x == 1 and yJ == y and self.joueurs[joueur-1]['pos'] not in self.murs['verticaux'] and [xJ, yJ-1] not in self.murs['verticaux']:
-        self.joueurs[joueur-1]['pos'] = position
+    graphe = construire_graphe([joueur['pos'] for joueur in self.joueurs],
+    self.murs['horizontaux'], self.murs['verticaux'])
 
-    # si le joueur se déplace à droite
-    elif xJ - x == -1 and yJ == y and [xJ+1, yJ] not in self.murs['verticaux'] and [xJ+1, yJ-1] not in self.murs['verticaux']:
+    #vérifie position valide
+    if position in graphe.successors(self.joueurs[joueur-1]['pos']):
         self.joueurs[joueur-1]['pos'] = position
-
-    # si le joueur se déplace vers le bas
-    elif xJ == x and yJ - y == 1 and self.joueurs[joueur-1]['pos'] not in self.murs['horizontaux'] and [xJ - 1, yJ] not in self.murs['horizontaux']:
-        self.joueurs[joueur-1]['pos'] = position
-
-    # si le joueur se déplace vers le haut
-    elif xJ == x and yJ - y == -1 and [xJ, yJ + 1] not in self.murs['horizontaux'] and [xJ - 1, yJ + 1] not in self.murs['horizontaux']:
-        self.joueurs[joueur-1]['pos'] = position
-
-    # si le joueur saute par dessus le pion adverse et qu'il n'y a pas de mur
-    elif [x, y] == self.joueurs[2 - joueur]['pos']:
-        self.joueurs[joueur-1]['pos'] = position
-
-    # si le joueur saute par dessus le pion adverse et qu'il y a un mur
-    elif [x, y] == self.joueurs[2 - joueur]['pos']:
-        self.joueurs[joueur-1]['pos'] = position
-
+        
     else:
         raise QuoridorError("la position est invalide pour l'état actuel du jeu.")
+
+def état_partie(self):
+    pass
+
+def jouer_coup(self, joueur):
+    if joueur > 2 or joueur < 1:
+        raise QuoridorError("le numéro du joueur est autre que 1 ou 2.")
+
+    if partie_terminée(self) is not False:
+        raise QuoridorError("la partie est déjà terminée.")
+
+    graphe = construire_graphe([joueur['pos'] for joueur in self.joueurs],
+    self.murs['horizontaux'], self.murs['verticaux'])
+    coups= nx.shortest_path(graphe, self.joueurs[joueur - 1]['pos'], 'B' + str(joueur))
+    coupsAdver= nx.shortest_path(graphe, self.joueurs[2 - joueur]['pos'], 'B' + str(3 - joueur))
+
+    if len(coups) <= len(coupsAdver):
+        déplacer_jeton(self, joueur, coups[1])
+    else:
+        #si horizontal
+        if coupsAdver[0][0]-coupsAdver[1][0] == 0:
+            #je pense pas que c'est fonctionnel
+            placer_mur(self, joueur, coupsAdver[1], 'horizontaux')
+        
+        #si vertical
+        elif coupsAdver[0][1]-coupsAdver[1][1] == 0:
+            #je pense pas que c'est fonctionnel
+            placer_mur(self, joueur, coupsAdver[1], 'verticaux')
+
+def partie_terminée(self):
+    pass
+
+def placer_mur(self, joueur: int, position: tuple, orientation: str):
+    pass
 
 class QuoridorError(Exception):
     pass
