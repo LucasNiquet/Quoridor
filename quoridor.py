@@ -160,6 +160,7 @@ def déplacer_jeton(self, joueur, position):
     else:
         raise QuoridorError("la position est invalide pour l'état actuel du jeu.")
 
+
 def jouer_coup(self, joueur):
     if joueur > 2 or joueur < 1:
         raise QuoridorError("le numéro du joueur est autre que 1 ou 2.")
@@ -188,32 +189,17 @@ def jouer_coup(self, joueur):
 
 
 def état_partie(self):
-    """
-    Produire l'état actuel de la partie.
-
-    :returns: une copie de l'état actuel du jeu sous la forme d'un dictionnaire:
-    {
-        'joueurs': [
-            {'nom': nom1, 'murs': n1, 'pos': (x1, y1)},
-            {'nom': nom2, 'murs': n2, 'pos': (x2, y2)},
+    #murs a tirer de la methode placer_mur
+    état = {'joueurs': [
+        {'nom': self.joueurs[0], 'murs': self.joueurs[0].murs, 'pos': self.joueurs[0]['pos']},
+        {'nom': self.joueurs[1], 'murs': self.joueurs[1].murs, 'pos': self.joueurs[1]['pos']},
         ],
         'murs': {
-            'horizontaux': [...],
-            'verticaux': [...],
+            'horizontaux': self.murs['horizontaux'],
+             'vertcaux' : self.murs['verticaux'],
         }
-    }
-
-    où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée 
-    au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est 
-    associée à sa position sur le damier. Une position est représentée par un tuple 
-    de deux coordonnées x et y, où 1<=x<=9 et 1<=y<=9.
-
-    Les murs actuellement placés sur le damier sont énumérés dans deux listes de
-    positions (x, y). Les murs ont toujours une longueur de 2 cases et leur position
-    est relative à leur coin inférieur gauche. Par convention, un mur horizontal se
-    situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
-    mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes x et x+1.
-    """
+        }
+    return état
 
 
 def partie_terminée(self):
@@ -234,17 +220,31 @@ def partie_terminée(self):
 
 
 def placer_mur(self, joueur: int, position: tuple, orientation: str):
-    """
-    Pour le joueur spécifié, placer un mur à la position spécifiée.
+    if joueur != 1 and joueur != 2:
+        raise QuoridorError('le numéro du joueur est autre que 1 ou 2.')
+    
 
-    :param joueur: le numéro du joueur (1 ou 2).
-    :param position: le tuple (x, y) de la position du mur.
-    :param orientation: l'orientation du mur ('horizontal' ou 'vertical').
-    :raises QuoridorError: le numéro du joueur est autre que 1 ou 2.
-    :raises QuoridorError: un mur occupe déjà cette position.
-    :raises QuoridorError: la position est invalide pour cette orientation.
-    :raises QuoridorError: le joueur a déjà placé tous ses murs.
-    """
+    if orientation == 'horizontal':
+        for mur in self.murs['horizontaux']:
+            if position == mur or (position[0] == (mur[0]+1) and position[1] == mur[1]):
+                raise QuoridorError('un mur occupe déjà cette position.')
+            if mur[0] > 8 or mur[0] < 1 or mur[1] < 2 or mur[1] > 9:
+                raise QuoridorError('la position est invalide pour cette orientation.')
+        #on ajoute le tuple position au murs horizontaux
+
+        self.murs['horizontaux'].append(position)
+    if orientation == 'vertical':
+        for mur in self.murs['verticaux']:
+            if position == mur or (position[1] == (mur[1]+1) and position[0] == mur[0]):
+                raise QuoridorError('un mur occupe déjà cette position.')
+            if mur[0] > 9 or mur[0] < 2 or mur[1] < 1 or mur[1] > 8:
+                raise QuoridorError('la position est invalide pour cette orientation.')
+        #on ajoute le tuple position au murs verticaux
+        self.murs['verticaux'].append(position)
+
+    if self['joueurs'][joueur-1]['murs'] > 9:
+        raise QuoridorError('le joueur a déjà placé tous ses murs.') 
+    
 
 class QuoridorError(Exception):
     pass
