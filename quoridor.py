@@ -73,6 +73,7 @@ def __str__(self):
     damier += ligneF
     return damier
 
+
 def déplacer_jeton(self, joueur, position):
     x = position[0]
     y = position[1]
@@ -110,7 +111,69 @@ def déplacer_jeton(self, joueur, position):
         self.joueurs[joueur-1]['pos'] = position
 
     else:
-        raise QuoridorError("la position est invalide pour l'état actuel du jeu.")
+        raise QuoridorError(
+            "la position est invalide pour l'état actuel du jeu.")
+
+
+def état_partie(self):
+    """
+    Produire l'état actuel de la partie.
+
+    :returns: une copie de l'état actuel du jeu sous la forme d'un dictionnaire:
+    {
+        'joueurs': [
+            {'nom': nom1, 'murs': n1, 'pos': (x1, y1)},
+            {'nom': nom2, 'murs': n2, 'pos': (x2, y2)},
+        ],
+        'murs': {
+            'horizontaux': [...],
+            'verticaux': [...],
+        }
+    }
+
+    où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée 
+    au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est 
+    associée à sa position sur le damier. Une position est représentée par un tuple 
+    de deux coordonnées x et y, où 1<=x<=9 et 1<=y<=9.
+
+    Les murs actuellement placés sur le damier sont énumérés dans deux listes de
+    positions (x, y). Les murs ont toujours une longueur de 2 cases et leur position
+    est relative à leur coin inférieur gauche. Par convention, un mur horizontal se
+    situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
+    mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes x et x+1.
+    """
+
+
+def partie_terminée(self):
+    """
+    Déterminer si la partie est terminée.
+
+    :returns: le nom du gagnant si la partie est terminée; False autrement.
+    """
+    terminée = False
+    # Reste à savoir si le joueur[0] commence toujours en bas et l'inverse pour la condition ==9 et ==0
+    # Implémenté comme cela fait en sorte que le joueur 1 gagne s'il atteint la ligne 9 puisqu'il part à 1
+    # et vice-versa pour le joueur 2
+    if état_partie(self)['joueurs'][0]['pos'][1] == 9:
+        terminée = f'Le gagnant est: {état_partie(self)["joueurs"][0]["nom"]}'
+    elif état_partie(self)['joueurs'][1]['pos'][1] == 1:
+        terminée = f'Le gagnant est: {état_partie(self)["joueurs"][1]["nom"]}'
+    return terminée
+
+
+def placer_mur(self, joueur: int, position: tuple, orientation: str):
+    """
+    Pour le joueur spécifié, placer un mur à la position spécifiée.
+
+    :param joueur: le numéro du joueur (1 ou 2).
+    :param position: le tuple (x, y) de la position du mur.
+    :param orientation: l'orientation du mur ('horizontal' ou 'vertical').
+    :raises QuoridorError: le numéro du joueur est autre que 1 ou 2.
+    :raises QuoridorError: un mur occupe déjà cette position.
+    :raises QuoridorError: la position est invalide pour cette orientation.
+    :raises QuoridorError: le joueur a déjà placé tous ses murs.
+    """
+
 
 class QuoridorError(Exception):
     pass
