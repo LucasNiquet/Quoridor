@@ -175,16 +175,15 @@ def jouer_coup(self, joueur):
     if len(coups) <= len(coupsAdver):
         déplacer_jeton(self, joueur, coups[1])
     else:
-
         #si horizontal
         if coupsAdver[0][0]-coupsAdver[1][0] == 0:
             #je pense pas que c'est fonctionnel
-            placer_mur(self, joueur, coupsAdver[1], 'horizontaux')
-        
+            placer_mur(self, joueur, graphe.successors(coupsAdver[0])[0], 'horizontaux')
+            
         #si vertical
         elif coupsAdver[0][1]-coupsAdver[1][1] == 0:
             #je pense pas que c'est fonctionnel
-            placer_mur(self, joueur, coupsAdver[1], 'verticaux')
+            placer_mur(self, joueur, graphe.successors(coupsAdver[0])[0], 'verticaux')
 
 
 def état_partie(self):
