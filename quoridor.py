@@ -180,7 +180,7 @@ class Quoridor:
         coupsAdver = nx.shortest_path(
             graphe, self.joueurs[2 - joueur]['pos'], 'B' + str(3 - joueur))
 
-        if len(coups) <= len(coupsAdver):
+        if len(coups) <= len(coupsAdver) or self.joueurs[joueur-1]['murs'] < 1:
             self.déplacer_jeton(joueur, coups[1])
             #si horizontal
             if coupsAdver[0][0]-coupsAdver[1][0] == 0:
