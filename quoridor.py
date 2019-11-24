@@ -155,7 +155,7 @@ class Quoridor:
         return damier
 
     def déplacer_jeton(self, joueur, position):
-        if joueur > 2 or joueur < 1:
+        if joueur != 2 and joueur != 1:
             raise QuoridorError("le numéro du joueur est autre que 1 ou 2.")
 
         if position[0] > 9 or position[0] < 1 or position[1] > 9 or position[1] < 1:
@@ -174,7 +174,7 @@ class Quoridor:
                 "la position est invalide pour l'état actuel du jeu.")
 
     def jouer_coup(self, joueur):
-        if joueur > 2 or joueur < 1:
+        if joueur != 2 and joueur != 1:
             raise QuoridorError("le numéro du joueur est autre que 1 ou 2.")
 
         if self.partie_terminée() is not False:
