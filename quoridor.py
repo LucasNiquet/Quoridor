@@ -194,14 +194,14 @@ class Quoridor:
             # si horizontal
             if coupsAdver[0][0]-coupsAdver[1][0] == 0:
                 for i in graphe.successors(coupsAdver[0]):
-                    if i not in self.liste_murs["horizontaux"] or [i[0]-1, i[1]] not in self.liste_murs["horizontaux"]:
+                    if i not in self.liste_murs["horizontaux"] and (i[0]-1, i[1]) not in self.liste_murs["horizontaux"]:
                         self.placer_mur(joueur, tuple(i), 'horizontal')
                         break
 
             # si vertical
             else:
                 for i in graphe.successors(coupsAdver[0]):
-                    if i not in self.liste_murs["verticaux"] or [i[0], i[1]-1] not in self.liste_murs["verticaux"]:
+                    if i not in self.liste_murs["verticaux"] and [i[0], i[1]-1] not in self.liste_murs["verticaux"]:
                         self.placer_mur(joueur, tuple(i), 'vertical')
                         break
 
@@ -288,8 +288,8 @@ if __name__ == "__main__":
     jeu = Quoridor(["joueur 1", "joueur 2"])
     
     while True:
-        jeu.jouer_coup(1)
         jeu.jouer_coup(2)
+        jeu.jouer_coup(1)
         print(jeu)
     #jeu.déplacer_jeton(2, (5, 8))
     #print(jeu)
