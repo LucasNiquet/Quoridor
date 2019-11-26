@@ -301,8 +301,8 @@ if __name__ == "__main__":
         jeu.jouer_coup(1)
         jeu.jouer_coup(2)
         print(jeu)
-    jeu.déplacer_jeton(2, (5, 8))
-    print(jeu)
+    #jeu.déplacer_jeton(2, (5, 8))
+    #print(jeu)
 
     #jeu.placer_mur(1, (3,6), 'horizontal')
     #print(jeu)
