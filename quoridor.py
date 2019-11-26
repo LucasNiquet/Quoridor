@@ -189,18 +189,20 @@ class Quoridor:
 
         if len(coups) <= len(coupsAdver) or self.liste_joueurs[joueur-1]['murs'] < 1:
             self.déplacer_jeton(joueur, coups[1])
+        
+        else:
             # si horizontal
             if coupsAdver[0][0]-coupsAdver[1][0] == 0:
                 for i in graphe.successors(coupsAdver[0]):
                     if i not in self.liste_murs["horizontaux"] or [i[0]-1, i[1]] not in self.liste_murs["horizontaux"]:
-                        self.placer_mur(joueur, tuple(i), 'horizontaux')
+                        self.placer_mur(joueur, tuple(i), 'horizontal')
                         break
 
             # si vertical
             else:
                 for i in graphe.successors(coupsAdver[0]):
                     if i not in self.liste_murs["verticaux"] or [i[0], i[1]-1] not in self.liste_murs["verticaux"]:
-                        self.placer_mur(joueur, tuple(i), 'verticaux')
+                        self.placer_mur(joueur, tuple(i), 'vertical')
                         break
 
     def état_partie(self):
@@ -279,12 +281,16 @@ def isiterable(p_object):
 
 
 if __name__ == "__main__":
-    dic_j1 = {'nom': 'joueur1', 'murs': 10, 'pos': (3, 4)}
-    dic_j2 = {'nom': 'joueur2', 'murs': 10, 'pos': (5, 8)}
-    jeu = Quoridor([dic_j1,dic_j2])
-    #jeu = Quoridor(["joueur 1", "joueur 2"])
-    print(jeu)
-
+    #dic_j1 = {'nom': 'joueur1', 'murs': 10, 'pos': (5, 2)}
+    #dic_j2 = {'nom': 'joueur2', 'murs': 10, 'pos': (5, 8)}
+    #jeu = Quoridor([dic_j1,dic_j2])
+    
+    jeu = Quoridor(["joueur 1", "joueur 2"])
+    
+    while True:
+        jeu.jouer_coup(1)
+        jeu.jouer_coup(2)
+        print(jeu)
     #jeu.déplacer_jeton(2, (5, 8))
     #print(jeu)
 
@@ -296,8 +302,7 @@ if __name__ == "__main__":
         #print(f"La partie est terminée, le joueur {gagnant} a remporté!")
     #jeu.placer_mur(1,(5,9),'horizontal')
     #print(jeu)
-    
-    #jeu.jouer_coup(2)
+
     #print(jeu)
     #jeu.jouer_coup(2)
     #print(jeu)
