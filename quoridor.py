@@ -245,6 +245,11 @@ class Quoridor:
                     if mur[0] > 8 or mur[0] < 1 or mur[1] < 2 or mur[1] > 9:
                         raise QuoridorError(
                             'la position est invalide pour cette orientation.')
+                #si les deux murs se croisent:
+                for mur in self.liste_murs['verticaux']:
+                    if position[0] == mur[0]-1 and position[1] == mur[1]+1:
+                        raise QuoridorError(
+                            'un mur occupe déjà cette position.')
                 # on ajoute le tuple position au murs horizontaux
                 self.liste_murs['horizontaux'].append(position)
                 self.liste_joueurs[joueur-1]['murs'] -= 1
@@ -256,6 +261,11 @@ class Quoridor:
                     if mur[0] > 9 or mur[0] < 2 or mur[1] < 1 or mur[1] > 8:
                         raise QuoridorError(
                             'la position est invalide pour cette orientation.')
+                #si les deux murs se croisent:
+                for mur in self.liste_murs['horizontaux']:
+                    if position[0] == mur[0]+1 and position[1] == mur[1]-1:
+                        raise QuoridorError(
+                            'un mur occupe déjà cette position.')
                 # on ajoute le tuple position au murs verticaux
                 self.liste_murs['verticaux'].append(position)
                 self.liste_joueurs[joueur-1]['murs'] -= 1
