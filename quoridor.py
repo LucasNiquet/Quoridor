@@ -98,17 +98,22 @@ class Quoridor:
                 self.liste_joueurs = [copy.deepcopy(
                     joueurs[0]), copy.deepcopy(joueurs[1])]
 
-                if joueurs[0]['pos'][0] < 1 or joueurs[0]['pos'][0] > 9 or joueurs[0]['pos'][1] < 1 or joueurs[0]['pos'][1] > 9 or joueurs[1]['pos'][0] < 1 or joueurs[1]['pos'][0] > 9 or joueurs[1]['pos'][1] < 1 or joueurs[1]['pos'][1] > 9:
+                if joueurs[0]['pos'][0] < 1 or joueurs[0]['pos'][0] > 9 or joueurs[0][
+                    'pos'][1] < 1 or joueurs[0]['pos'][1] > 9 or joueurs[1][
+                        'pos'][0] < 1 or joueurs[1]['pos'][0] > 9 or joueurs[1][
+                            'pos'][1] < 1 or joueurs[1]['pos'][1] > 9:
                     raise QuoridorError(
                         "la position d'un joueur est invalide.")
 
-                if joueurs[0]['murs'] > 10 or joueurs[0]['murs'] < 0 or joueurs[1]['murs'] > 10 or joueurs[1]['murs'] < 0:
+                if joueurs[0]['murs'] > 10 or joueurs[0][
+                    'murs'] < 0 or joueurs[1]['murs'] > 10 or joueurs[1]['murs'] < 0:
                     raise QuoridorError(
                         "le nombre de murs qu'un joueur peut placer est > 10, ou négatif.")
         else:
             raise QuoridorError("joueurs n'est pas un itérable.")
 
-        if len(self.liste_murs['horizontaux']) + len(self.liste_murs['verticaux']) + self.liste_joueurs[0]['murs'] + self.liste_joueurs[1]['murs'] != 20:
+        if len(self.liste_murs['horizontaux']) + len(self.liste_murs[
+            'verticaux']) + self.liste_joueurs[0]['murs'] + self.liste_joueurs[1]['murs'] != 20:
             raise QuoridorError(
                 "le total des murs placés et plaçables n'est pas égal à 20.")
 
@@ -194,14 +199,18 @@ class Quoridor:
             # si horizontal
             if coupsAdver[0][0]-coupsAdver[1][0] == 0:
                 for i in graphe.successors(coupsAdver[0]):
-                    if i not in self.liste_murs["horizontaux"] and (i[0]-1, i[1]) not in self.liste_murs["horizontaux"] and (i[0] + 1, i[1] - 1) not in self.liste_murs["verticaux"]:
+                    if i not in self.liste_murs["horizontaux"] and (i[0]-1, i[
+                        1]) not in self.liste_murs["horizontaux"] and (i[0] + 1, i[
+                            1] - 1) not in self.liste_murs["verticaux"]:
                         self.placer_mur(joueur, tuple(i), 'horizontal')
                         break
 
             # si vertical ou autre
             else:
                 for i in graphe.successors(coupsAdver[0]):
-                    if i not in self.liste_murs["verticaux"] and [i[0], i[1]-1] not in self.liste_murs["verticaux"] and (i[0] - 1, i[1] + 1) not in self.liste_murs["horizontaux"]:
+                    if i not in self.liste_murs["verticaux"] and [i[0], i[
+                        1]-1] not in self.liste_murs["verticaux"] and (i[0] - 1, i[
+                            1] + 1) not in self.liste_murs["horizontaux"]:
                         self.placer_mur(joueur, tuple(i), 'vertical')
                         break
 
@@ -239,13 +248,13 @@ class Quoridor:
         if self.liste_joueurs[joueur-1]['murs'] > 0:
             if orientation == 'horizontal':
                 if position[0] > 8 or position[0] < 1 or position[1] < 2 or position[1] > 9:
-                        raise QuoridorError(
-                            'la position est invalide pour cette orientation.')
+                    raise QuoridorError(
+                        'la position est invalide pour cette orientation.')
                 for mur in self.liste_murs['horizontaux']:
                     if position == mur or (position[0] == (mur[0]+1) and position[1] == mur[1]):
                         raise QuoridorError(
                             'un mur occupe déjà cette position.')
-                    
+
                 # si les deux murs se croisent:
                 for mur in self.liste_murs['verticaux']:
                     if position[0] == mur[0]-1 and position[1] == mur[1]+1:
@@ -256,13 +265,13 @@ class Quoridor:
                 self.liste_joueurs[joueur-1]['murs'] -= 1
             if orientation == 'vertical':
                 if position[0] > 9 or position[0] < 2 or position[1] < 1 or position[1] > 8:
-                        raise QuoridorError(
-                            'la position est invalide pour cette orientation.')
+                    raise QuoridorError(
+                        'la position est invalide pour cette orientation.')
                 for mur in self.liste_murs['verticaux']:
                     if position == mur or (position[1] == (mur[1]+1) and position[0] == mur[0]):
                         raise QuoridorError(
                             'un mur occupe déjà cette position.')
-                    
+
                 # si les deux murs se croisent:
                 for mur in self.liste_murs['horizontaux']:
                     if position[0] == mur[0]+1 and position[1] == mur[1]-1:
@@ -293,31 +302,9 @@ def isiterable(p_object):
 
 
 if __name__ == "__main__":
-    #dic_j1 = {'nom': 'joueur1', 'murs': 10, 'pos': (5, 2)}
-    #dic_j2 = {'nom': 'joueur2', 'murs': 10, 'pos': (5, 8)}
-    #jeu = Quoridor([dic_j1,dic_j2])
-
     jeu = Quoridor(["joueur 1", "joueur 2"])
 
-    jeu.placer_mur(1,(9,8),'vertical')
-    print(jeu)
-    
-    #while True:
-        #jeu.jouer_coup(1)
-        #jeu.jouer_coup(2)
-        #print(jeu)
-    #jeu.déplacer_jeton(2, (5, 8))
-    # print(jeu)
-
-    #jeu.placer_mur(1, (3,6), 'horizontal')
-    # print(jeu)
-
-    #gagnant = jeu.partie_terminée()
-    # if gagnant:
-        #print(f"La partie est terminée, le joueur {gagnant} a remporté!")
-    # jeu.placer_mur(1,(5,9),'horizontal')
-    # print(jeu)
-
-    # print(jeu)
-    # jeu.jouer_coup(2)
-    # print(jeu)
+    while True:
+        jeu.jouer_coup(1)
+        jeu.jouer_coup(2)
+        print(jeu)
