@@ -238,13 +238,14 @@ class Quoridor:
             raise QuoridorError('le numéro du joueur est autre que 1 ou 2.')
         if self.liste_joueurs[joueur-1]['murs'] > 0:
             if orientation == 'horizontal':
+                if position[0] > 8 or position[0] < 1 or position[1] < 2 or position[1] > 9:
+                        raise QuoridorError(
+                            'la position est invalide pour cette orientation.')
                 for mur in self.liste_murs['horizontaux']:
                     if position == mur or (position[0] == (mur[0]+1) and position[1] == mur[1]):
                         raise QuoridorError(
                             'un mur occupe déjà cette position.')
-                    if mur[0] > 8 or mur[0] < 1 or mur[1] < 2 or mur[1] > 9:
-                        raise QuoridorError(
-                            'la position est invalide pour cette orientation.')
+                    
                 # si les deux murs se croisent:
                 for mur in self.liste_murs['verticaux']:
                     if position[0] == mur[0]-1 and position[1] == mur[1]+1:
@@ -254,13 +255,14 @@ class Quoridor:
                 self.liste_murs['horizontaux'].append(position)
                 self.liste_joueurs[joueur-1]['murs'] -= 1
             if orientation == 'vertical':
+                if position[0] > 9 or position[0] < 2 or position[1] < 1 or position[1] > 8:
+                        raise QuoridorError(
+                            'la position est invalide pour cette orientation.')
                 for mur in self.liste_murs['verticaux']:
                     if position == mur or (position[1] == (mur[1]+1) and position[0] == mur[0]):
                         raise QuoridorError(
                             'un mur occupe déjà cette position.')
-                    if mur[0] > 9 or mur[0] < 2 or mur[1] < 1 or mur[1] > 8:
-                        raise QuoridorError(
-                            'la position est invalide pour cette orientation.')
+                    
                 # si les deux murs se croisent:
                 for mur in self.liste_murs['horizontaux']:
                     if position[0] == mur[0]+1 and position[1] == mur[1]-1:
@@ -297,10 +299,13 @@ if __name__ == "__main__":
 
     jeu = Quoridor(["joueur 1", "joueur 2"])
 
-    while True:
-        jeu.jouer_coup(1)
-        jeu.jouer_coup(2)
-        print(jeu)
+    jeu.placer_mur(1,(9,8),'vertical')
+    print(jeu)
+    
+    #while True:
+        #jeu.jouer_coup(1)
+        #jeu.jouer_coup(2)
+        #print(jeu)
     #jeu.déplacer_jeton(2, (5, 8))
     # print(jeu)
 
