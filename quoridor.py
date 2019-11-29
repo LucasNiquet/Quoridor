@@ -215,7 +215,7 @@ class Quoridor:
             else:
                 for i in graphe.successors(coups_adver[0]):
                     if (i not in self.liste_murs["verticaux"] and
-                        [i[0], i[1]-1] not in self.liste_murs["verticaux"] and
+                            [i[0], i[1]-1] not in self.liste_murs["verticaux"] and
                             (i[0] - 1, i[1] + 1) not in self.liste_murs["horizontaux"]):
                         self.placer_mur(joueur, tuple(i), 'vertical')
                         break
@@ -225,11 +225,11 @@ class Quoridor:
         # murs a tirer de la methode placer_mur
         état = {'joueurs': [
             {'nom': self.liste_joueurs[0]['nom'], 'murs': self.liste_joueurs[0]['murs'],
-                'pos': self.liste_joueurs[0]['pos']},
+             'pos': self.liste_joueurs[0]['pos']},
             {'nom': self.liste_joueurs[1]['nom'], 'murs': self.liste_joueurs[1]['murs'],
-                'pos': self.liste_joueurs[1]['pos']}, ], 'murs': {
-            'horizontaux': self.liste_murs['horizontaux'],
-            'verticaux': self.liste_murs['verticaux'], }}
+             'pos': self.liste_joueurs[1]['pos']}, ], 'murs': {
+                    'horizontaux': self.liste_murs['horizontaux'],
+                    'verticaux': self.liste_murs['verticaux'], }}
         return état
 
     def partie_terminée(self):
@@ -285,10 +285,9 @@ class Quoridor:
             raise QuoridorError('Le joueur a déjà placé tous ses murs.')
 
 
-"""Classe pour soulever les erreurs dans le jeu Quoridor"""
-
-
 class QuoridorError(Exception):
+    """Classe pour soulever les erreurs dans le jeu Quoridor"""
+
     def __init__(self, message):
         super().__init__(message)
 
