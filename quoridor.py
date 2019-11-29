@@ -99,19 +99,18 @@ class Quoridor:
                 self.liste_joueurs = [copy.deepcopy(
                     joueurs[0]), copy.deepcopy(joueurs[1])]
                 # valide position joueur1
-                if joueurs[0]['pos'][0] < 1 or joueurs[0]['pos'][0] > 9 or joueurs[0]['pos'][1] < 1 or joueurs[0]['pos'][1] > 9:
+                if (joueurs[0]['pos'][0] < 1 or joueurs[0]['pos'][0] > 9 or
+                        joueurs[0]['pos'][1] < 1 or joueurs[0]['pos'][1] > 9):
                     raise QuoridorError(
                         "la position d'un joueur est invalide.")
                 # valide position joueur2
-                if joueurs[1]['pos'][0] < 1 or joueurs[1]['pos'][0] > 9 or joueurs[1]['pos'][1] < 1 or joueurs[1]['pos'][1] > 9:
+                if (joueurs[1]['pos'][0] < 1 or joueurs[1]['pos'][0] > 9 or
+                        joueurs[1]['pos'][1] < 1 or joueurs[1]['pos'][1] > 9):
                     raise QuoridorError(
                         "la position d'un joueur est invalide.")
-                # Valide nombre mur joueur1
-                if joueurs[0]['murs'] > 10 or joueurs[0]['murs'] < 0:
-                    raise QuoridorError(
-                        "le nombre de murs qu'un joueur peut placer est > 10, ou négatif.")
-                # Valide nombre mur joueur2
-                if joueurs[1]['murs'] > 10 or joueurs[1]['murs'] < 0:
+                # Valide nombre mur
+                if (joueurs[0]['murs'] > 10 or joueurs[0]['murs'] < 0 or
+                        joueurs[1]['murs'] > 10 or joueurs[1]['murs'] < 0):
                     raise QuoridorError(
                         "le nombre de murs qu'un joueur peut placer est > 10, ou négatif.")
         else:
@@ -206,18 +205,18 @@ class Quoridor:
             # si horizontal
             if coups_adver[0][0]-coups_adver[1][0] == 0:
                 for i in graphe.successors(coups_adver[0]):
-                    if i not in self.liste_murs["horizontaux"] and (i[0]-1, i[
-                        1]) not in self.liste_murs["horizontaux"] and (i[0] + 1, i[
-                            1] - 1) not in self.liste_murs["verticaux"]:
+                    if (i not in self.liste_murs["horizontaux"] and
+                            (i[0]-1, i[1]) not in self.liste_murs["horizontaux"] and
+                            (i[0] + 1, i[1] - 1) not in self.liste_murs["verticaux"]):
                         self.placer_mur(joueur, tuple(i), 'horizontal')
                         break
 
             # si vertical ou autre
             else:
                 for i in graphe.successors(coups_adver[0]):
-                    if i not in self.liste_murs["verticaux"] and [i[0], i[
-                        1]-1] not in self.liste_murs["verticaux"] and (i[0] - 1, i[
-                            1] + 1) not in self.liste_murs["horizontaux"]:
+                    if (i not in self.liste_murs["verticaux"] and
+                        [i[0], i[1]-1] not in self.liste_murs["verticaux"] and
+                            (i[0] - 1, i[1] + 1) not in self.liste_murs["horizontaux"]):
                         self.placer_mur(joueur, tuple(i), 'vertical')
                         break
 
@@ -228,13 +227,9 @@ class Quoridor:
             {'nom': self.liste_joueurs[0]['nom'], 'murs': self.liste_joueurs[0]['murs'],
                 'pos': self.liste_joueurs[0]['pos']},
             {'nom': self.liste_joueurs[1]['nom'], 'murs': self.liste_joueurs[1]['murs'],
-                'pos': self.liste_joueurs[1]['pos']},
-        ],
-            'murs': {
-                'horizontaux': self.liste_murs['horizontaux'],
-            'vertcaux': self.liste_murs['verticaux'],
-        }
-        }
+                'pos': self.liste_joueurs[1]['pos']}, ], 'murs': {
+            'horizontaux': self.liste_murs['horizontaux'],
+            'verticaux': self.liste_murs['verticaux'], }}
         return état
 
     def partie_terminée(self):
@@ -290,12 +285,12 @@ class Quoridor:
             raise QuoridorError('Le joueur a déjà placé tous ses murs.')
 
 
+"""Classe pour soulever les erreurs dans le jeu Quoridor"""
+
+
 class QuoridorError(Exception):
     def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return str(self.message)
+        super().__init__(message)
 
 
 def isiterable(p_object):
