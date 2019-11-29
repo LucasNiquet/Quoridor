@@ -228,8 +228,8 @@ class Quoridor:
              'pos': self.liste_joueurs[0]['pos']},
             {'nom': self.liste_joueurs[1]['nom'], 'murs': self.liste_joueurs[1]['murs'],
              'pos': self.liste_joueurs[1]['pos']}, ], 'murs': {
-                    'horizontaux': self.liste_murs['horizontaux'],
-                    'verticaux': self.liste_murs['verticaux'], }}
+                 'horizontaux': self.liste_murs['horizontaux'],
+                 'verticaux': self.liste_murs['verticaux'], }}
         return état
 
     def partie_terminée(self):
